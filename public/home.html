@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAREER COMPASS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+         .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+            background-size: cover;
+            background-position: center;
+        }
+        .career-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+        .counselor-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            object-fit: cover;
+            margin: 0 auto;
+        }
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+        }
+        .rating > input {
+            display: none;
+        }
+        .rating > label {
+            position: relative;
+            width: 1.1em;
+            font-size: 30px;
+            color: #FFD700;
+            cursor: pointer;
+        }
+        .rating > label::before {
+            content: "\2605";
+            position: absolute;
+            opacity: 0;
+        }
+        .rating > label:hover:before,
+        .rating > label:hover ~ label:before {
+            opacity: 1 !important;
+        }
+        .rating > input:checked ~ label:before {
+            opacity: 1;
+        }
+        .rating:hover > input:checked ~ label:before {
+            opacity: 0.4;
+        }
+        .team-member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            object-fit: cover;
+            margin: 0 auto;
+        }.contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+         button:hover {
+            background-color: #16a085;
+        }
+        .info-box {
+            margin-bottom: 2rem;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #1abc9c;
+        }
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #34495e;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            text-decoration: none;
+        }
+        .social-links a:hover {
+            background-color: #1abc9c;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section with Background Image -->
+    <div class="hero-section relative mb-8">
+        <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/blogs/12839/images/766db4c-0bfb-e6f6-1a-a325213be_Motivational-Speaker.jpg" alt="Career Compass Hero" class="w-full h-64 object-cover"/>
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="text-center text-white">
+                <h1 class="text-4xl font-bold mb-2">CAREER COMPASS</h1>
+                <p class="text-xl">Discover Your Perfect Career Path</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Logout Button -->
+        <div class="flex justify-end mb-4">
+            <button id="logout-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Logout</button>
+        </div>
+        
+        <div class="mb-6">
+            <div class="flex justify-center space-x-4 border-b">
+                <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 active" data-tab="explore">Explore Careers</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="counselors">Counselors</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="aptitude">Aptitude Test</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="schedule">Schedule Session</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="feedback">Feedback</button>
+                <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="about">About Us</button>
+            </div>
+        </div>
+
+        <!-- Explore Careers Tab -->
+        <div id="explore" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Engineering -->
+                <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRZOecBD1NnwMhC6jU_9JkFlMy1fJQ1cg_gA42_sALEGimJNVxLwm67JWple_SpcDERus&usqp=CAU" alt="Engineering" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Engineering</h3>
+                        <p class="text-gray-600 mb-4">Explore various engineering fields including computer science, mechanical, and electrical engineering.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>B.Tech</li>
+                                    <li>BE</li>
+                                    <li>B.Sc Engineering</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Sciences -->
+                <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://wallpapers.com/images/hd/doctor-with-globe-in-hand-hd-medical-dff7ahiwc5xsfjm0.jpg" alt="Medical Sciences" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Medical Sciences</h3>
+                        <p class="text-gray-600 mb-4">Career opportunities in healthcare, medicine, and related fields.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>MBBS</li>
+                                    <li>BDS</li>
+                                    <li>B.Pharm</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commerce -->
+                <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://plus.unsplash.com/premium_photo-1723291359453-aea7e6bcbebd?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGxhbm5pbmclMjBtZWV0aW5nfGVufDB8fDB8fHww" alt="Commerce & Management" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Commerce & Management</h3>
+                        <p class="text-gray-600 mb-4">Business, finance, and management career paths.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>BBA</li>
+                                    <li>B.Com</li>
+                                    <li>CA</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                <!--Arts & Humanities-->
+                <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://media.licdn.com/dms/image/v2/D4D12AQGODmTGyvdSmg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1698214830141?e=2147483647&v=beta&t=7EqGqfQzAVAAq8Pfhd03g91ux2VDppddKQrQUgsBmYM" alt="Arts & Humanities" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Arts & Humanities</h3>
+                        <p class="text-gray-600 mb-4">Explore careers in creative arts, literature, and social sciences.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>BA</li>
+                                    <li>BFA</li>
+                                    <li>BMM</li>
+                                    <li>BJM</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Design & Architecture-->
+                <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://lldev.co.za/images/Architecture-Design-Wallpapers-HD-04-2560x1600.jpg" alt="Design & Architecture" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Design & Architecture</h3>
+                        <p class="text-gray-600 mb-4">Career paths in visual design, user experience, and architectural design.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>B.Arch</li>
+                                    <li>B.Des</li>
+                                    <li>BID</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                 <!--Hotel Management & Tourism-->
+                 <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://www.dei.ac.in/dei/arts/images/BVOC/Tourism.jpg" alt="Hotel Management & Tourism" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Hotel Management & Tourism</h3>
+                        <p class="text-gray-600 mb-4">Opportunities in hospitality, tourism, and service industry.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>BHM</li>
+                                    <li>BTTM</li>
+                                    <li>BBA in Hospitality</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                 <!--Law-->
+                 <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://media.istockphoto.com/id/1449334081/photo/statue-of-lady-justice-on-desk-of-a-judge-or-lawyer.jpg?s=612x612&w=0&k=20&c=139ZS1ycMRXBqnPEWV3l08zBLNe40WPiAudVnmeQrl8=" alt="Law" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Law</h3>
+                        <p class="text-gray-600 mb-4">Legal careers and judiciary services.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>LLB</li>
+                                    <li>BA LLB</li>
+                                    <li>BBA LLB</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                 <!--Agriculture & Environmental Science-->
+                 <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://media.istockphoto.com/id/1182619005/photo/biology-laboratory-nature-and-science-plants-with-biochemistry-structure-on-green-background.jpg?s=612x612&w=0&k=20&c=TLqoeYYlVMQlhA_iW9GOFYKVWAl67V3nTRTSPYpkwOE=" alt="Agriculture & Environmental Science" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Agriculture & Environmental Science</h3>
+                        <p class="text-gray-600 mb-4">Careers in agriculture, environmental conservation, and sustainability.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>B.Sc Agriculture</li>
+                                    <li>B.Sc Environmental Science</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                 <!--Aviation & Aerospace-->
+                 <div class="card bg-white rounded-lg shadow overflow-hidden">
+                    <img src="https://media.istockphoto.com/id/1406270929/photo/civil-aviation-and-commercial-airlines-travel-and-business-trips-transport-system-and.jpg?s=612x612&w=0&k=20&c=IdaXOB_xWYigJRqifnP5iIWHGW2iVuM46oS7Y6u1b-0=" alt="Aviation & Aerospace" class="career-image"/>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Aviation & Aerospace</h3>
+                        <p class="text-gray-600 mb-4">Careers in aviation industry and aerospace technology.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold">Key Courses:</h4>
+                                <ul class="list-disc pl-4 text-gray-600">
+                                    <li>B.Sc Aviation</li>
+                                    <li>Aircraft Maintenance Engineering</li>
+                                </ul>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">More</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Counselors Tab -->
+        <div id="counselors" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card bg-white rounded-lg shadow p-6 text-center">
+                    <img src="https://www.india.com/wp-content/uploads/2015/06/untitled23.jpg" alt="Dr. Sarah Thomas" class="counselor-image mb-4"/>
+                    <h3 class="text-xl font-bold mb-2">Dr. Sarah Thomas</h3>
+                    <p class="text-blue-600 font-medium mb-4">Engineering & Technology</p>
+                    <div class="space-y-2 text-gray-600 text-left">
+                        <p><strong>Experience:</strong> 15+ years</p>
+                        <p><strong>Specialization:</strong> Computer Science</p>
+                        <p><strong>Languages:</strong> English,Malayalam,Hindi</p>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Session</button>
+                        <button class="flex-1 border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-50">Profile</button>
+                    </div>  
+                </div>    
+            
+                <div class="card bg-white rounded-lg shadow p-6 text-center">
+                    <img src="https://www.founderjar.com/wp-content/uploads/2022/09/Sanjiv-Bajaj.jpeg" alt="Dr.Anurag Agarwal" class="counselor-image mb-4"/>
+                    <h3 class="text-xl font-bold mb-2">Dr.Anurag Agarwal</h3>
+                    <p class="text-blue-600 font-medium mb-4">Medical Science</p>
+                    <div class="space-y-2 text-gray-600 text-left">
+                        <p><strong>Experience:</strong> 12+ years</p>
+                        <p><strong>Specialization:</strong> Healthcare and Pharmaceutical Sciences</p>
+                        <p><strong>Languages:</strong> English,Hindi</p>
+                    </div> 
+                        <div class="flex gap-2 mt-4">
+                            <button class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Session</button>
+                            <button class="flex-1 border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-50">Profile</button>
+                        </div>
+                </div>
+
+                <div class="card bg-white rounded-lg shadow p-6 text-center">
+                    <img src="https://www.showtimeevent.com/blog/wp-content/uploads/2024/09/picc.jpg" alt="Prof. Abraham Vincent" class="counselor-image mb-4"/>
+                    <h3 class="text-xl font-bold mb-2">Prof. Abraham Vincent</h3>
+                    <p class="text-blue-600 font-medium mb-4">Commerce & Management</p>
+                    <div class="space-y-2 text-gray-600 text-left">
+                        <p><strong>Experience:</strong> 10+ years</p>
+                        <p><strong>Specialization:</strong>Finance and Business Strategy </p>
+                        <p><strong>Languages:</strong> English, Malayalam</p>
+                    </div> 
+                        <div class="flex gap-2 mt-4">
+                            <button class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Session</button>
+                            <button class="flex-1 border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-50">Profile</button>
+                        </div>
+                </div>
+
+                <div class="card bg-white rounded-lg shadow p-6 text-center">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdXK114k5zT2XOfzqC9UyUx72SqBQEFZmNalnNLC_TI_I37XA1lKxoLxrvnF5udtwPmJo&usqp=CAU" alt="Dr. Dimple Ahuja" class="counselor-image mb-4"/>
+                    <h3 class="text-xl font-bold mb-2">Dr.Dimple Ahuja</h3>
+                    <p class="text-blue-600 font-medium mb-4">Arts & Humanities</p>
+                    <div class="space-y-2 text-gray-600 text-left">
+                        <p><strong>Experience:</strong> 8+ years</p>
+                        <p><strong>Specialization:</strong> Liberal Arts and Social Sciences</p>
+                        <p><strong>Languages:</strong> English, Malayalam, Hindi</p>
+                    </div> 
+                        <div class="flex gap-2 mt-4">
+                            <button class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Session</button>
+                            <button class="flex-1 border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-50">Profile</button>
+                        </div>
+                </div>
+
+                <div class="card bg-white rounded-lg shadow p-6 text-center">
+                    <img src="https://media.istockphoto.com/id/1363118407/photo/portrait-of-young-businessman.jpg?s=612x612&w=0&k=20&c=e9xjo1AdlIbr7ttZe3iBG3CBWKUBwdTMLkPus9DxA_s=" alt="Prof. David Wilson" class="counselor-image mb-4"/>
+                    <h3 class="text-xl font-bold mb-2">Prof. David Wilson</h3>
+                    <p class="text-blue-600 font-medium mb-4">Design & Architecture</p>
+                    <div class="space-y-2 text-gray-600 text-left">
+                        <p><strong>Experience:</strong> 14+ years</p>
+                        <p><strong>Specialization:</strong>Architectural Design and Urban Planning</p>
+                        <p><strong>Languages:</strong> English, Malayalam, Hindi</p>
+                    </div> 
+                        <div class="flex gap-2 mt-4">
+                            <button class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Session</button>
+                            <button class="flex-1 border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-50">Profile</button>
+                        </div>
+                </div>
+                <div class="card bg-white rounded-lg shadow p-6 text-center">
+                    <img src="https://static-gi.asianetnews.com/images/01jjk045f7cpe8byv6f1pgyx1n/1-1737951942119_900x1200xt.jpg" alt="Ms. Rebecca Martin" class="counselor-image mb-4"/>
+                    <h3 class="text-xl font-bold mb-2">Ms. Rebecca Martin</h3>
+                    <p class="text-blue-600 font-medium mb-4">Hotel Management & Tourism</p>
+                    <div class="space-y-2 text-gray-600 text-left">
+                        <p><strong>Experience:</strong> 11+ years</p>
+                        <p><strong>Specialization:</strong>Hospitality and Event Management</p>
+                        <p><strong>Languages:</strong> English, Hindi</p>
+                    </div> 
+                        <div class="flex gap-2 mt-4">
+                            <button class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Book Session</button>
+                            <button class="flex-1 border border-blue-600 text-blue-600 py-2 rounded hover:bg-blue-50">Profile</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aptitude Test Tab -->
+  <div id="aptitude" class="tab-content">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-4">Career Aptitude Test</h2>
+    
+            <!-- Initial information screen -->
+            <div id="test-intro" class="mb-6">
+                <p class="text-gray-600 mb-4">Take our comprehensive aptitude test to discover career paths that align with your unique strengths, interests, and personality traits.</p>
+        
+                <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                    <h3 class="font-semibold text-blue-700 mb-2">About this test:</h3>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                        <li>10-15 minutes to complete</li>
+                        <li>25 multiple-choice questions</li>
+                        <li>Covers interests, skills, work styles, and preferences</li>
+                        <li>Provides personalized career recommendations</li>
+                        <li>No right or wrong answers - just be honest!</li>
+                    </ul>
+                </div>
+        
+                <div class="flex justify-center">
+                    <button onclick="startTest()" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition duration-300 flex items-center">
+                        Start Test
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Test Questions Container (initially hidden) -->
+            <div id="test-questions" class="hidden">
+                <!-- Questions will be dynamically loaded here -->
+                <div id="question-container"></div>
+                <button onclick="submitTest()" class="bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-medium mt-4 hover:bg-green-700 transition duration-300">Submit Test</button>
+            </div>
+        </div> 
+    </div>  
+</div>  
+
+        <!-- Schedule Tab -->
+        <div id="schedule" class="tab-content">
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">Schedule a Counseling Session</h2>
+                    <p class="text-gray-600 mb-6">Book a one-on-one session with our career counselors</p>
+                    <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">View Available Slots</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feedback Tab -->
+        <div id="feedback" class="tab-content">
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">We Value Your Feedback</h2>
+                    <p class="text-gray-600 mb-6">Please share your thoughts about our platform to help us improve. No personal information is collected.</p>
+                    
+                    <form id="feedbackForm" class="space-y-6">
+                        <!-- Rating section -->
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-medium">How would you rate your overall experience?</label>
+                            <div class="rating">
+                                <input type="radio" name="rating" id="star5" value="5" />
+                                <label for="star5" title="5 stars">★</label>
+                                <input type="radio" name="rating" id="star4" value="4" />
+                                <label for="star4" title="4 stars">★</label>
+                                <input type="radio" name="rating" id="star3" value="3" />
+                                <label for="star3" title="3 stars">★</label>
+                                <input type="radio" name="rating" id="star2" value="2" />
+                                <label for="star2" title="2 stars">★</label>
+                                <input type="radio" name="rating" id="star1" value="1" />
+                                <label for="star1" title="1 star">★</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Which features did you find most helpful -->
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-medium">Which features did you find most helpful?</label>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="careerInfo" name="helpfulFeatures" value="careerInfo" class="mr-2">
+                                    <label for="careerInfo">Career Information</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="counselorProfiles" name="helpfulFeatures" value="counselorProfiles" class="mr-2">
+                                    <label for="counselorProfiles">Counselor Profiles</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="aptitudeTest" name="helpfulFeatures" value="aptitudeTest" class="mr-2">
+                                    <label for="aptitudeTest">Aptitude Test</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="scheduling" name="helpfulFeatures" value="scheduling" class="mr-2">
+                                    <label for="scheduling">Session Scheduling</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- How did you hear about us -->
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-medium">How did you hear about Career Compass?</label>
+                            <select class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Please select</option>
+                                <option value="search">Search Engine</option>
+                                <option value="social">Social Media</option>
+                                <option value="friend">Friend or Family</option>
+                                <option value="school">School/College</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Feedback text area -->
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-medium">What can we improve?</label>
+                            <textarea rows="4" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Share your suggestions..."></textarea>
+                        </div>
+                        
+                        <!-- Additional questions -->
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-medium">Did you find the career information useful?</label>
+                            <div class="flex space-x-4">
+                                <div class="flex items-center">
+                                    <input type="radio" id="useful-yes" name="useful" value="yes" class="mr-1">
+                                    <label for="useful-yes">Yes</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="useful-somewhat" name="useful" value="somewhat" class="mr-1">
+                                    <label for="useful-somewhat">Somewhat</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="useful-no" name="useful" value="no" class="mr-1">
+                                    <label for="useful-no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit button -->
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Submit Feedback</button>
+                        
+                        <!-- Success message - hidden by default -->
+                        <div id="success-message" class="hidden p-3 bg-green-100 text-green-700 rounded">
+                            Thank you for your feedback! We appreciate your input.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Us Tab -->
+        <div id="about" class="tab-content">
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">About Career Compass</h2>
+                    
+                    <!-- Mission & Vision -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-3 text-blue-600">Our Mission</h3>
+                        <p class="text-gray-700 mb-4">
+                            At Career Compass, we believe that every individual deserves to find a fulfilling career path that aligns with their skills, interests, and ambitions. Our mission is to provide personalized guidance and comprehensive resources to help students and professionals navigate their career journeys with confidence.
+                        </p>
+                        
+                        <h3 class="text-xl font-semibold mb-3 text-blue-600">Our Vision</h3>
+                        <p class="text-gray-700">
+                            To become the most trusted career guidance platform that empowers individuals to make informed decisions about their professional futures, creating a world where everyone can pursue careers they are passionate about.
+                        </p>
+                        <h2 class="text-2xl font-bold mb-4">Contact Us</h2>
+                        <div class="contact-container">
+                            <div class="contact-info">
+                                <div class="info-box">
+                                    <h3>Get in Touch</h3>
+                                    <p><strong>Email:</strong> info@careercompass.com</p>
+                                    <p><strong>Phone:</strong> (555) 123-4567</p>
+                                </div>
+                                            
+                                    <div class="info-box">
+                                        <h3>Connect With Us</h3>
+                                            <p>Follow us on social media for career tips, job postings, and success stories!</p>
+                                            <div class="social-links">
+                                                <a href="#" aria-label="Facebook">FB</a>
+                                                <a href="#" aria-label="Twitter">TW</a>
+                                                <a href="#" aria-label="LinkedIn">LI</a>
+                                                <a href="#" aria-label="Instagram">IG</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div> 
+       
+    </div>
+    
+    <script src="home.js"></script>
+</body>
+</html>

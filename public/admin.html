@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h2>Admin Panel</h2>
+            <ul class="sidebar-menu">
+                <li><button onclick="showSection('dashboard')" class="active">Dashboard</button></li>
+                <li><button onclick="showSection('aptitude')">Aptitude Tests</button></li>
+                <li><button onclick="showSection('counselors')">Counselors</button></li>
+                <li><button onclick="showSection('feedback')">Feedback</button></li>
+            </ul>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+        
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <h1>Admin Dashboard</h1>
+                <p>Welcome to the admin dashboard. Use the sidebar to navigate between different sections.</p>
+                
+                <div class="item-list">
+                    <div class="item">
+                        <div class="item-content">
+                            <h3>Aptitude Tests</h3>
+                            <p>Manage aptitude test questions and settings</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" onclick="showSection('aptitude')">Manage</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-content">
+                            <h3>Counselors</h3>
+                            <p>Add, remove, and manage counselors</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" onclick="showSection('counselors')">Manage</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-content">
+                            <h3>Feedback</h3>
+                            <p>View and manage user feedback</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" onclick="showSection('feedback')">Manage</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Aptitude Tests Section -->
+            <div id="aptitude" class="section">
+                <h1>Aptitude Tests</h1>
+                
+                <form id="questionForm">
+                    <div class="form-group">
+                        <label for="questionText">Question</label>
+                        <textarea id="questionText" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="optionA">Option A</label>
+                        <input type="text" id="optionA" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="optionB">Option B</label>
+                        <input type="text" id="optionB" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="optionC">Option C</label>
+                        <input type="text" id="optionC" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="optionD">Option D</label>
+                        <input type="text" id="optionD" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="correctAnswer">Correct Answer</label>
+                        <select id="correctAnswer" required>
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="verbal">Verbal Ability</option>
+                            <option value="logical">Logical Reasoning</option>
+                            <option value="quantitative">Quantitative Aptitude</option>
+                            <option value="technical">Technical Knowledge</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="addQuestion()">Add Question</button>
+                </form>
+                
+                <div class="item-list" id="questionsList">
+                    <!-- Questions will be displayed here -->
+                </div>
+            </div>
+            
+            <!-- Counselors Section -->
+            <div id="counselors" class="section">
+                <h1>Counselors Management</h1>
+                
+                <form id="counselorForm">
+                    <div class="form-group">
+                        <label for="counselorName">Name</label>
+                        <input type="text" id="counselorName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="counselorEmail">Email</label>
+                        <input type="email" id="counselorEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="counselorSpecialty">Specialty</label>
+                        <input type="text" id="counselorSpecialty" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="counselorBio">Bio</label>
+                        <textarea id="counselorBio" required></textarea>
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="addCounselor()">Add Counselor</button>
+                </form>
+                
+                <div class="item-list" id="counselorsList">
+                    <!-- Counselors will be displayed here -->
+                </div>
+            </div>
+            
+            <!-- Feedback Section -->
+            <div id="feedback" class="section">
+                <h1>User Feedback</h1>
+                
+                <div class="item-list" id="feedbackList">
+                    <!-- Feedback will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
