@@ -194,7 +194,7 @@ router.post('/submit-test', async (req, res) => {
       }
   
       // Optionally, store the candidate's result in the database here
-  
+      
       // Return the computed scores and recommended career
       res.json({
         message: 'Test processed successfully.',

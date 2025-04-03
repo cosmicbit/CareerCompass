@@ -156,28 +156,47 @@ async function loadQuestions() {
 }
 
 // Counselors Functions
-function addCounselor() {
+async function addCounselor() {
+    print("hello");
     const name = document.getElementById('counselorName').value;
-    const email = document.getElementById('counselorEmail').value;
-    const specialty = document.getElementById('counselorSpecialty').value;
-    const bio = document.getElementById('counselorBio').value;
+    const field = document.getElementById('counselorField').value;
+    const contact = document.getElementById('counselorContact').value;
+    const experience = document.getElementById('counselorExperience').value;
+    const specialization = document.getElementById('counselorSpecialization').value;
+    const languages = document.getElementById('counselorLanguages').value;
     
-    if (!name || !email || !specialty || !bio) {
+    if (!name || !field ) {
         alert('Please fill in all fields');
         return;
     }
     
     const counselor = {
-        id: Date.now(),
         name,
-        email,
-        specialty,
-        bio
+        field,
+        contact,
+        experience,
+        specialization,
+        languages
     };
     
-    const counselors = JSON.parse(localStorage.getItem('counselors') || '[]');
-    counselors.push(counselor);
-    localStorage.setItem('counselors', JSON.stringify(counselors));
+    try {
+        const response = await fetch("/counselor/addCounselor", {  // Corrected endpoint
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(counselor)  // Corrected JSON format
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Counselor Addition Success:", data);
+        alert(data.message || "Counselor added successfully!");
+    } catch (error) {
+        console.error("Error adding Counselor:", error);
+        alert("Addition of Counselor failed. Try again.");
+    }
     
     // Reset form
     document.getElementById('counselorForm').reset();
@@ -186,42 +205,62 @@ function addCounselor() {
     loadCounselors();
 }
 
-function deleteCounselor(id) {
+async function deleteCounselor(id) {
+    console.log(id)
     if (confirm('Are you sure you want to delete this counselor?')) {
-        const counselors = JSON.parse(localStorage.getItem('counselors') || '[]');
-        const updatedCounselors = counselors.filter(c => c.id !== id);
-        localStorage.setItem('counselors', JSON.stringify(updatedCounselors));
-        loadCounselors();
+        try {
+            const response = await fetch(`/counselor/deleteCounselors/${id}`, {
+                method: "DELETE"
+            });
+    
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+            const data = await response.json();
+            console.log("Deleted:", data);
+            loadCounselors();
+        } catch (error) {
+            console.error("Error deleting question:", error);
+        }
+        
     }
 }
 
-function loadCounselors() {
-    const counselors = JSON.parse(localStorage.getItem('counselors') || '[]');
-    const counselorsList = document.getElementById('counselorsList');
+async function loadCounselors() {
+    try {
+        const response = await fetch('/counselor/getCounselors');
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const counselors = await response.json();
+        console.log("counselors:", counselors);
+        const counselorsList = document.getElementById('counselorsList');
     
-    counselorsList.innerHTML = '';
-    
-    if (counselors.length === 0) {
-        counselorsList.innerHTML = '<p>No counselors added yet.</p>';
-        return;
+        counselorsList.innerHTML = '';
+        
+        if (counselors.length === 0) {
+            counselorsList.innerHTML = '<p>No questions added yet.</p>';
+            return;
+        }
+        
+        counselors.forEach(counselor => {
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.innerHTML = `
+                <div class="item-content">
+                    <h3>${counselor.name}</h3>
+                    <p><strong>Field:</strong> ${counselor.field}</p>
+                    <p><strong>Specialization:</strong> ${counselor.specialization}</p>
+                    <p><strong>Languages:</strong> ${counselor.languages}</p>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-danger" onclick="deleteCounselor('${counselor._id}')">Delete</button>
+                </div>
+            `;
+            counselorsList.appendChild(item);
+        });
+    } catch (error) {
+        console.error("Fetch error:", error);
     }
     
-    counselors.forEach(counselor => {
-        const item = document.createElement('div');
-        item.className = 'item';
-        item.innerHTML = `
-            <div class="item-content">
-                <h3>${counselor.name}</h3>
-                <p><strong>Email:</strong> ${counselor.email}</p>
-                <p><strong>Specialty:</strong> ${counselor.specialty}</p>
-                <p><strong>Bio:</strong> ${counselor.bio}</p>
-            </div>
-            <div class="item-actions">
-                <button class="btn btn-danger" onclick="deleteCounselor(${counselor.id})">Delete</button>
-            </div>
-        `;
-        counselorsList.appendChild(item);
-    });
 }
 
 // Feedback Functions

@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoutes');
+const counselorRoutes = require('./routes/counselorRoutes');
 
 const app = express();
 
@@ -14,9 +15,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static frontend
 app.use(express.json())
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
+app.use('/counselor', counselorRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
