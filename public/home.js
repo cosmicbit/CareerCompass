@@ -18,17 +18,60 @@ document.addEventListener('DOMContentLoaded', function() {
     const successMessage = document.getElementById('success-message');
     
     if (feedbackForm) {
-        feedbackForm.addEventListener('submit', function(e) {
+        feedbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             // Here you would normally process the form data
-            // For now, just show the success message
-            successMessage.classList.remove('hidden');
-            feedbackForm.reset();
+            // Get form values
+            const rating = document.querySelector('input[name="rating"]:checked');
+            const helpfulFeatures = [...document.querySelectorAll('input[name="helpfulFeatures"]:checked')].map(f => f.value);
+            const heardFrom = document.querySelector('select').value;
+            const feedbackText = document.querySelector('textarea').value.trim();
+            const useful = document.querySelector('input[name="useful"]:checked');
+
+            // Validation: Ensure rating and feedback are provided
+            if (!rating) {
+                alert("Please provide a rating.");
+                return;
+            }
+
+            // Construct feedback data (for demonstration, this logs it to the console)
+            const feedbackData = {
+                rating: rating.value,
+                helpfulFeatures: helpfulFeatures,
+                heardFrom: heardFrom,
+                feedback: feedbackText,
+                useful: useful ? useful.value : null
+            };
+            console.log(feedbackData);
+            try {
+                const response = await fetch("/feedback/addFeedback", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(feedbackData)
+                });
+        
+                const result = await response.json();
+        
+                if (response.ok) {
+                    console.log("Feedback Submitted:", feedbackData);
+                    // For now, just show the success message
+                    successMessage.classList.remove('hidden');
+                    feedbackForm.reset();
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.classList.add('hidden');
+                    }, 3000);
+                } else {
+                    alert(result.message || "Something went wrong.");
+                }
+            } catch (error) {
+                console.error("Error submitting feedback:", error);
+                alert("Error submitting feedback. Please try again.");
+            }
             
-            // Hide success message after 3 seconds
-            setTimeout(() => {
-                successMessage.classList.add('hidden');
-            }, 3000);
         });
     }
     document.getElementById("logout-btn").addEventListener("click", function () {

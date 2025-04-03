@@ -264,40 +264,66 @@ async function loadCounselors() {
 }
 
 // Feedback Functions
-function loadFeedback() {
-    const feedbacks = JSON.parse(localStorage.getItem('feedback') || '[]');
-    const feedbackList = document.getElementById('feedbackList');
-    
-    feedbackList.innerHTML = '';
-    
-    if (feedbacks.length === 0) {
-        feedbackList.innerHTML = '<p>No feedback received yet.</p>';
-        return;
+async function loadFeedback() {
+    try {
+        const response = await fetch("/feedback/getFeedbacks");
+        if (!response.ok) {
+            throw new Error("Failed to fetch feedbacks");
+        }
+
+        const feedbacks = await response.json();
+        const feedbackList = document.getElementById('feedbackList');
+        
+        feedbackList.innerHTML = ''; // Clear previous content
+
+        if (feedbacks.length === 0) {
+            feedbackList.innerHTML = '<p>No feedback received yet.</p>';
+            return;
+        }
+
+        feedbacks.forEach(feedback => {
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.innerHTML = `
+                <div class="item-content">
+                    <h3>Rating: ${feedback.rating} ⭐</h3>
+                    <p><strong>Helpful Features:</strong> ${feedback.helpfulFeatures.length ? feedback.helpfulFeatures.join(', ') : 'None'}</p>
+                    <p><strong>Heard From:</strong> ${feedback.heardFrom}</p>
+                    <p><strong>Feedback:</strong> ${feedback.feedback}</p>
+                    <p><strong>Useful:</strong> ${feedback.useful}</p>
+                    <p><strong>Submitted At:</strong> ${new Date(feedback.submittedAt).toLocaleString()}</p>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-danger" onclick="deleteFeedback('${feedback._id}')">Delete</button>
+                </div>
+            `;
+            feedbackList.appendChild(item);
+        });
+
+    } catch (error) {
+        console.error("Error fetching feedbacks:", error);
+        document.getElementById('feedbackList').innerHTML = '<p>Error loading feedbacks.</p>';
     }
-    
-    feedbacks.forEach(feedback => {
-        const item = document.createElement('div');
-        item.className = 'item';
-        item.innerHTML = `
-            <div class="item-content">
-                <h3>From: ${feedback.name || 'Anonymous'}</h3>
-                <p><strong>Email:</strong> ${feedback.email || 'Not provided'}</p>
-                <p><strong>Date:</strong> ${new Date(feedback.timestamp).toLocaleString()}</p>
-                <p><strong>Message:</strong> ${feedback.message}</p>
-            </div>
-            <div class="item-actions">
-                <button class="btn btn-danger" onclick="deleteFeedback(${feedback.id})">Delete</button>
-            </div>
-        `;
-        feedbackList.appendChild(item);
-    });
 }
 
-function deleteFeedback(id) {
-    if (confirm('Are you sure you want to delete this feedback?')) {
-        const feedbacks = JSON.parse(localStorage.getItem('feedback') || '[]');
-        const updatedFeedbacks = feedbacks.filter(f => f.id !== id);
-        localStorage.setItem('feedback', JSON.stringify(updatedFeedbacks));
-        loadFeedback();
+
+async function deleteFeedback(id) {
+    if (confirm("Are you sure you want to delete this feedback?")) {
+        try {
+            const response = await fetch(`feedback/deleteFeedback/${id}`, {
+                method: "DELETE",
+            });
+
+            const result = await response.json();
+            console.log("Delete response:", result);
+
+            if (response.ok) {
+                loadFeedback(); // Reload list after deletion
+            } else {
+                alert("Error deleting feedback: " + result.message);
+            }
+        } catch (error) {
+            console.error("Error deleting feedback:", error);
+        }
     }
 }
