@@ -14,6 +14,8 @@
                 <li><button onclick="showSection('dashboard')" class="active">Dashboard</button></li>
                 <li><button onclick="showSection('aptitude')">Aptitude Tests</button></li>
                 <li><button onclick="showSection('counselors')">Counselors</button></li>
+                <li><button onclick="showSection('slotsManagement')">Manage Slots</button></li>
+                <li><button onclick="showSection('bookingsManagement')">Manage Bookings</button></li>
                 <li><button onclick="showSection('feedback')">Feedback</button></li>
             </ul>
             <button class="logout-btn" onclick="logout()">Logout</button>
@@ -45,7 +47,24 @@
                             <button class="btn" onclick="showSection('counselors')">Manage</button>
                         </div>
                     </div>
-                    
+                    <div class="item">
+                        <div class="item-content">
+                            <h3>Manage Slots</h3>
+                            <p>Add, remove, and manage slots of counselors</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" onclick="showSection('slotsManagement')">Manage</button>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="item-content">
+                            <h3>Manage Bookings</h3>
+                            <p>Add, remove, and manage bookings of counselors</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" onclick="showSection('bookingsManagement')">Manage</button>
+                        </div>
+                    </div>
                     <div class="item">
                         <div class="item-content">
                             <h3>Feedback</h3>
@@ -131,22 +150,32 @@
                     </div>
                     <div class="form-group">
                         <label for="counselorContact">Contact</label>
-                        <input type="text" id="counselorContact" required>
+                        <input type="text" id="counselorContact">
                     </div>
                     <div class="form-group">
                         <label for="counselorExperience">Experience</label>
-                        <input type="text" id="counselorExperience" required>
+                        <input type="text" id="counselorExperience">
                     </div>
-                    
-                    
                     <div class="form-group">
                         <label for="counselorSpecialization">Specialization</label>
-                        <input type="text" id="counselorSpecialization" required>
+                        <input type="text" id="counselorSpecialization">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="counselorLanguages">Languages</label>
-                        <input type="text" id="counselorLanguages" required>
+                        <label for="counselorLanguages">Languages (comma separated)</label>
+                        <input type="text" id="counselorLanguages">
+                    </div>
+                    <div class="form-group">
+                        <label for="counselorTimezone">Timezone</label>
+                        <select id="counselorTimezone">
+                            <option value="Asia/Kolkata" selected>Asia/Kolkata</option>
+                            <option value="America/New_York">America/New_York</option>
+                            <option value="Europe/London">Europe/London</option>
+                            <option value="Australia/Sydney">Australia/Sydney</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="counselorBio">Bio</label>
+                        <textarea id="counselorBio" required></textarea>
                     </div>
                     
                     <button type="button" class="btn" onclick="addCounselor()">Add Counselor</button>
@@ -156,6 +185,55 @@
                     <!-- Counselors will be displayed here -->
                 </div>
             </div>
+            <div id="slotsManagement" class="section">
+                <h2>Manage Slots</h2>
+            
+                <form id="slotForm">
+                    <div class="form-group">
+                        <label for="slotCounselor">Select Counselor</label>
+                        <select id="slotCounselor"></select> <!-- Dropdown dynamically populated -->
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="slotStartTime">Start Time</label>
+                        <input type="datetime-local" id="slotStartTime" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="slotEndTime">End Time</label>
+                        <input type="datetime-local" id="slotEndTime" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="sessionType">Session Type</label>
+                        <select id="sessionType">
+                            <option value="virtual">Virtual</option>
+                            <option value="in_person">In-Person</option>
+                        </select>
+                    </div>
+            
+                    <button type="button" class="btn" onclick="addSlot()">Add Slot</button>
+                </form>
+            
+                <div class="item-list" id="slotsList">
+                    <!-- Slots will be displayed here -->
+                </div>
+            </div>
+
+            <div id="bookingsManagement" class="section">
+                <h2>Manage Bookings</h2>
+            
+                <div class="filter-group">
+                    <label for="filterCounselor">Filter by Counselor</label>
+                    <select id="filterCounselor" onchange="loadBookings()"></select>
+                </div>
+            
+                <div class="item-list" id="bookingsList">
+                    <!-- Bookings will be displayed here -->
+                </div>
+            </div>
+            
+            
             
             <!-- Feedback Section -->
             <div id="feedback" class="section">

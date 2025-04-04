@@ -35,20 +35,25 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: "Username and password required" });
         }
         
-        const user = await User.findOne({ username:email });
+        const user = await User.findOne({ username: email });
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+
         const isAdmin = user.isadmin;
         const token = jwt.sign({ userId: user._id, isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
         console.log("User logged in:", email, "Admin status:", isAdmin);
-        res.json({ token, isAdmin });
+
+        // ✅ Include userId in the response
+        res.json({ token, userId: user._id, isAdmin });
 
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({ error: 'Error logging in' });
     }
 });
+
 
 router.post('/registerAdmin', async (req, res) => {
     console.log("Admin Register endpoint hit");  // Debug log

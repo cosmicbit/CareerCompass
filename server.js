@@ -7,6 +7,8 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoutes');
 const counselorRoutes = require('./routes/counselorRoutes');
+const slotRoutes = require('./routes/slotRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 
 const app = express();
@@ -21,6 +23,8 @@ app.use(express.json())
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
 app.use('/counselor', counselorRoutes);
+app.use('/slot', slotRoutes);
+app.use('/booking', bookingRoutes);
 app.use('/feedback', feedbackRoutes);
 
 // Connect to MongoDB

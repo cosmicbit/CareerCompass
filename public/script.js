@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
+        
         const email = document.getElementById("login-email").value;
         const password = document.getElementById("login-password").value;
         
@@ -36,23 +37,21 @@ document.addEventListener("DOMContentLoaded", function () {
     
             console.log("Login Success:", data);
             alert(data.message || "Logged in successfully!");
-            
-            // Store token and isAdmin status in localStorage
+    
+            // Store token, userId, and isAdmin status in localStorage
             localStorage.setItem("token", data.token);
+            localStorage.setItem("userId", data.userId);  // ✅ Store user ID
             localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
     
             // Redirect based on user type
-            if (data.isAdmin) {
-                window.location.href = "admin.html";  // Redirect to admin panel
-            } else {
-                window.location.href = "home.html";  // Redirect to normal user home
-            }
+            window.location.href = data.isAdmin ? "admin.html" : "home.html";
     
         } catch (error) {
             console.error("Error logging in:", error);
             alert(error.message || "Login failed. Check your credentials and try again.");
         }
     });
+    
     
 
     registerForm.addEventListener("submit", async function (event) {

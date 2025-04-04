@@ -257,11 +257,200 @@ async function loadCounselors() {
             `;
             counselorsList.appendChild(item);
         });
+
+        // Update the dropdown for slot management
+        const counselorDropdown = document.getElementById("slotCounselor");
+        counselorDropdown.innerHTML = "<option value=''>Select a Counselor</option>"; // Default option
+
+        counselors.forEach(counselor => {
+            const option = document.createElement("option");
+            option.value = counselor._id;
+            option.textContent = counselor.name;
+            counselorDropdown.appendChild(option);
+        });
+
+        // Add event listener to trigger loadSlots() on selection
+        counselorDropdown.addEventListener("change", function () {
+            const selectedCounselorId = this.value;
+            if (selectedCounselorId) {
+                loadSlots(selectedCounselorId);
+            }
+        });
+
+        // Update the dropdown for slot management
+        const bookingcounselorDropdown = document.getElementById("filterCounselor");
+        bookingcounselorDropdown.innerHTML = "<option value=''>Select a Counselor</option>"; // Default option
+
+        counselors.forEach(counselor => {
+            const option = document.createElement("option");
+            option.value = counselor._id;
+            option.textContent = counselor.name;
+            bookingcounselorDropdown.appendChild(option);
+        });
+
+        // Add event listener to trigger loadSlots() on selection
+        bookingcounselorDropdown.addEventListener("change", function () {
+            const selectedCounselorId = this.value;
+            if (selectedCounselorId) {
+                loadBookings(selectedCounselorId);
+            }
+        });
+
     } catch (error) {
         console.error("Fetch error:", error);
     }
     
 }
+async function addSlot() {
+    const counselorId = document.getElementById("slotCounselor").value;
+    const startTime = document.getElementById("slotStartTime").value;
+    const endTime = document.getElementById("slotEndTime").value;
+    const sessionType = document.getElementById("sessionType").value;
+
+    if (!counselorId || !startTime || !endTime || !sessionType) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    const slotData = { counselorId, startTime, endTime, sessionType };
+
+    try {
+        const response = await fetch("/slot/addSlots", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(slotData)
+        });
+
+        if (!response.ok) throw new Error("Failed to add slot");
+
+        alert("Slot added successfully!");
+        document.getElementById("slotForm").reset();
+        loadSlots(counselorId); // Refresh slot list
+    } catch (error) {
+        console.error("Error adding slot:", error);
+        alert("Error adding slot. Try again.");
+    }
+}
+async function loadSlots(counselorId) {
+    try {
+        const response = await fetch(`/slot/getAll/${counselorId}`);
+        const data = await response.json();
+
+        const slotsList = document.getElementById("slotsList");
+        slotsList.innerHTML = ""; // Clear previous slots
+
+        if (data.slots.length === 0) {
+            slotsList.innerHTML = "<p>No slots available for this counselor.</p>";
+            return;
+        }
+
+        data.slots.forEach(slot => {
+            const slotItem = document.createElement("div");
+            slotItem.classList.add("slot-item");
+            slotItem.innerHTML = `
+                <p><strong>Start:</strong> ${new Date(slot.startTime).toLocaleString()}</p>
+                <p><strong>End:</strong> ${new Date(slot.endTime).toLocaleString()}</p>
+                <p><strong>Type:</strong> ${slot.sessionType === "virtual" ? "💻 Virtual" : "🏢 In-Person"}</p>
+                <p><strong>Status:</strong> ${slot.isBooked ? "Booked" : "Available"}</p>
+            `;
+            slotsList.appendChild(slotItem);
+        });
+
+    } catch (error) {
+        console.error("Error fetching slots:", error);
+    }
+}
+async function loadBookings() {
+    const counselorId = document.getElementById("filterCounselor").value;
+    const bookingsList = document.getElementById("bookingsList");
+
+    bookingsList.innerHTML = "<p>Loading bookings...</p>";
+
+    try {
+        const response = await fetch(`/booking/counselor/${counselorId}`);
+        const bookings = await response.json();
+
+        bookingsList.innerHTML = ""; // Clear previous data
+
+        if (bookings.length === 0) {
+            bookingsList.innerHTML = "<p>No bookings found.</p>";
+            return;
+        }
+
+        bookings.forEach(booking => {
+            const bookingDiv = document.createElement("div");
+            bookingDiv.classList.add("booking-item");
+            bookingDiv.innerHTML = `
+                <p>User: ${booking.user.name}</p>
+                <p>Slot: ${new Date(booking.slot.startTime).toLocaleString()}</p>
+                <p>Status: 
+                    <select onchange="updateBookingStatus('${booking._id}', this.value)">
+                        <option value="confirmed" ${booking.status === "confirmed" ? "selected" : ""}>Confirmed</option>
+                        <option value="completed" ${booking.status === "completed" ? "selected" : ""}>Completed</option>
+                        <option value="cancelled" ${booking.status === "cancelled" ? "selected" : ""}>Cancelled</option>
+                    </select>
+                </p>
+                <button onclick="cancelBooking('${booking._id}')">Cancel</button>
+            `;
+            bookingsList.appendChild(bookingDiv);
+        });
+
+    } catch (error) {
+        console.error("Error loading bookings:", error);
+        bookingsList.innerHTML = "<p>Error fetching bookings.</p>";
+    }
+}
+
+
+async function updateBookingStatus(bookingId, newStatus) {
+    try {
+        const response = await fetch(`/booking/update/${bookingId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: newStatus }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to update status");
+        }
+
+        alert("Booking status updated successfully!");
+        loadBookings(); // Refresh bookings list
+
+    } catch (error) {
+        console.error("Error updating booking status:", error);
+        alert("Error updating status.");
+    }
+}
+async function cancelBooking(bookingId) {
+    if (!confirm("Are you sure you want to cancel this booking?")) return;
+
+    try {
+        const response = await fetch(`/booking/cancel/${bookingId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to cancel booking");
+        }
+
+        alert("Booking cancelled successfully!");
+        loadBookings(); // Refresh bookings list
+
+    } catch (error) {
+        console.error("Error cancelling booking:", error);
+        alert("Error cancelling booking.");
+    }
+}
+
+// Load bookings on page load
+document.addEventListener("DOMContentLoaded", loadBookings);
+
 
 // Feedback Functions
 async function loadFeedback() {
