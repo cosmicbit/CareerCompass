@@ -381,7 +381,7 @@ async function loadBookings() {
             const bookingDiv = document.createElement("div");
             bookingDiv.classList.add("booking-item");
             bookingDiv.innerHTML = `
-                <p>User: ${booking.user.name}</p>
+                <p>User: ${booking.user.firstname}</p>
                 <p>Slot: ${new Date(booking.slot.startTime).toLocaleString()}</p>
                 <p>Status: 
                     <select onchange="updateBookingStatus('${booking._id}', this.value)">
@@ -404,7 +404,7 @@ async function loadBookings() {
 
 async function updateBookingStatus(bookingId, newStatus) {
     try {
-        const response = await fetch(`/booking/update/${bookingId}`, {
+        const response = await fetch(`/booking/admin/update/${bookingId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: newStatus }),
@@ -428,7 +428,7 @@ async function cancelBooking(bookingId) {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
 
     try {
-        const response = await fetch(`/booking/cancel/${bookingId}`, {
+        const response = await fetch(`/booking/admin/cancel/${bookingId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
         });
